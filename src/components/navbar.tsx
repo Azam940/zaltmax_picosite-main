@@ -29,7 +29,7 @@ const Navbar = () => {
   }, [openMenu]);
 
   return (
-    <header className="w-full sticky top-0">
+    <header className="w-full relative top-0">
       <div className="bg-[#141414] px-6 py-4 flex justify-between items-center">
         <ul className="hidden md:flex gap-10 text-white mont">
           <li>О нас</li>

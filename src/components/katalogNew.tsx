@@ -6,8 +6,7 @@ import pico from "@/assets/pico.png";
 import { Autoplay, Pagination } from "swiper/modules";
 import { useSearch } from "@/context/SearchContext";
 
-import "swiper/css";
-import "swiper/css/pagination";
+
 
 interface Product {
     id: number;

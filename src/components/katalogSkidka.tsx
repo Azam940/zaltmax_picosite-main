@@ -9,8 +9,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 
 
-import "swiper/css";
-import "swiper/css/pagination";
+
 
 interface Product {
   id: number;
@@ -106,7 +105,6 @@ const KatalogSkidka: FC = () => {
                 </div>
               </div>
 
-              {/* ADD TO CART BUTTON */}
               <button
                 onClick={() => addToCart(p)}
                 className="w-full bg-[#E8AA31] text-white rounded-md py-2 mt-4 hover:bg-[#c98f26] transition font-semibold"
