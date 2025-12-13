@@ -1,0 +1,22 @@
+.containerr {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+
+.mont {
+  font-family: "Montserrat", sans-serif;
+}
+
+.products-swiper {
+  padding-bottom: 50px !important;
+}
+
+.products-swiper .swiper-pagination {
+  bottom: 10px !important;
+}
+
+
