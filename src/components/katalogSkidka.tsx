@@ -8,6 +8,7 @@ import { useSearch } from "@/context/SearchContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 
+
 import "swiper/css";
 import "swiper/css/pagination";
 
