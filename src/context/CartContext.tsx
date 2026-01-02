@@ -11,14 +11,16 @@ interface Product {
   rating: number;
 }
 
-interface CartItem extends Product {
-  quantity: number;
+export interface CartItem extends Product {
+  qty: number; 
 }
 
 interface CartContextType {
   cart: CartItem[];
   addToCart: (product: Product) => void;
   removeFromCart: (id: number) => void;
+  increaseQty: (id: number) => void;
+  decreaseQty: (id: number) => void;
   clearCart: () => void;
 }
 
@@ -37,19 +39,37 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const addToCart = (product: Product) => {
     setCart((prev) => {
       const exist = prev.find((p) => p.id === product.id);
+
       if (exist) {
         return prev.map((p) =>
-          p.id === product.id
-            ? { ...p, quantity: p.quantity + 1 }
-            : p
+          p.id === product.id ? { ...p, qty: p.qty + 1 } : p
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+
+      return [...prev, { ...product, qty: 1 }];
     });
   };
 
+  const increaseQty = (id: number) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, qty: item.qty + 1 } : item
+      )
+    );
+  };
+
+  const decreaseQty = (id: number) => {
+    setCart((prev) =>
+      prev
+        .map((item) =>
+          item.id === id ? { ...item, qty: item.qty - 1 } : item
+        )
+        .filter((item) => item.qty > 0)
+    );
+  };
+
   const removeFromCart = (id: number) => {
-    setCart((prev) => prev.filter((p) => p.id !== id));
+    setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
   const clearCart = () => {
@@ -57,7 +77,16 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        increaseQty,
+        decreaseQty,
+        clearCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
@@ -65,6 +94,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useCart = () => {
   const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart must be used inside CartProvider");
+  if (!ctx) {
+    throw new Error("useCart must be used inside CartProvider");
+  }
   return ctx;
 };
