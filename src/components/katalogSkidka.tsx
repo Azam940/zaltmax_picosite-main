@@ -3,13 +3,14 @@ import { ChevronRight, Heart, ShoppingCart } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import pico from "@/assets/pico.png";
 import { Autoplay, Pagination } from "swiper/modules";
+import toast from "react-hot-toast";
 
 import { useSearch } from "@/context/SearchContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useCart } from "@/context/CartContext";
 
-
-
+import "swiper/css";
+import "swiper/css/pagination";
 
 interface Product {
   id: number;
@@ -27,7 +28,7 @@ const products: Product[] = Array.from({ length: 8 }).map((_, i) => ({
   title: "Нож lisa",
   size: "95х18",
   material: "Орех, Алюминий",
-  price: "(-2 719 p.) 2 019 р.",
+  price: "2 019 р.",
   img: pico,
   reviews: 12,
   rating: 5,
@@ -35,7 +36,7 @@ const products: Product[] = Array.from({ length: 8 }).map((_, i) => ({
 
 const KatalogSkidka: FC = () => {
   const { query } = useSearch();
-  const { addToWishlist } = useWishlist();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
 
   const filtered = products.filter(
@@ -46,71 +47,117 @@ const KatalogSkidka: FC = () => {
   );
 
   return (
-    <div className="container mx-auto px-[95px] py-10 select-none">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="font-bold text-3xl mont">Акции</h1>
+    <div className="container mx-auto px-4 xs:px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[95px] py-10 select-none">
 
-        <div className="flex items-center gap-2 cursor-pointer hover:opacity-70 transition">
-          <p className="font-semibold text-lg text-[#14141494] mont">Все акции</p>
-          <ChevronRight color="#E8AA31" size={22} />
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="font-bold text-xl sm:text-2xl md:text-3xl mont">
+          Акции
+        </h1>
+
+        <div className="flex items-center gap-1 sm:gap-2 cursor-pointer hover:opacity-70 transition">
+          <p className="font-medium text-sm sm:text-base text-[#14141494] mont">
+            Все акции
+          </p>
+          <ChevronRight color="#E8AA31" size={20} />
         </div>
       </div>
 
       <Swiper
-        slidesPerView={4}
-        spaceBetween={25}
         loop
         autoplay={{ delay: 2200, disableOnInteraction: false }}
         pagination={{ clickable: true }}
         modules={[Autoplay, Pagination]}
-        className="pb-"
+        spaceBetween={15}
+        breakpoints={{
+          340: { slidesPerView: 1.2 },
+          460: { slidesPerView: 2 },
+          760: { slidesPerView: 3 },
+          1090: { slidesPerView: 4 },
+          1440: { slidesPerView: 4 },
+        }}
+        className="pb-12"
       >
         {filtered.map((p) => (
           <SwiperSlide key={p.id}>
-            <div className="bg-white border rounded-xl p-5 shadow hover:shadow-lg transition cursor-pointer">
+            <div className="bg-white border rounded-xl p-4 sm:p-5 shadow hover:shadow-lg transition flex flex-col h-full">
 
-              <img src={p.img} alt={p.title} className="w-full h-44 object-contain mb-4" />
+              {/* IMAGE */}
+              <img
+                src={p.img}
+                alt={p.title}
+                className="w-full h-40 sm:h-44 object-contain mb-4"
+              />
 
-              <h3 className="font-semibold text-lg">{p.title}</h3>
-              <p className="text-sm text-gray-500">{p.size}</p>
-              <p className="text-sm text-gray-500">{p.material}</p>
+              {/* INFO */}
+              <h3 className="font-semibold text-base sm:text-lg">
+                {p.title}
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-500">{p.size}</p>
+              <p className="text-xs sm:text-sm text-gray-500">{p.material}</p>
 
-              <div className="flex items-center gap-1 text-yellow-400 text-lg mt-2">
+              {/* RATING */}
+              <div className="flex items-center gap-1 text-yellow-400 text-sm sm:text-base mt-2">
                 {"★".repeat(p.rating)}
               </div>
-
               <p className="text-xs text-gray-400">{p.reviews} отзывов</p>
 
+              {/* PRICE + ICONS */}
               <div className="flex justify-between items-center mt-3">
-                <span className="font-bold text-lg">{p.price}</span>
+                <span className="font-bold text-base sm:text-lg">
+                  {p.price}
+                </span>
 
-                <div className="flex items-center gap-3 text-xl">
+                <div className="flex items-center gap-3 text-lg">
 
                   {/* LIKE */}
                   <button
-                    onClick={() => addToWishlist(p)}
-                    className="hover:text-red-500 transition"
+                    onClick={() => {
+                      if (isInWishlist(p.id)) {
+                        removeFromWishlist(p.id);
+                        toast("Like olib tashlandi 💔");
+                      } else {
+                        addToWishlist(p);
+                        toast.success("Like qo‘shildi ❤️");
+                      }
+                    }}
+                    className={`transition ${
+                      isInWishlist(p.id)
+                        ? "text-red-500"
+                        : "text-gray-400"
+                    }`}
                   >
-                    <Heart />
+                    <Heart
+                      size={22}
+                      fill={isInWishlist(p.id) ? "red" : "none"}
+                    />
                   </button>
 
-                  {/* ADD TO CART ICON */}
+                  {/* CART ICON */}
                   <button
-                    onClick={() => addToCart(p)}
-                    className="hover:text-yellow-500 transition"
+                    onClick={() => {
+                      addToCart(p);
+                      toast.success("Savatga qo‘shildi 🛒");
+                    }}
+                    className="text-gray-400 hover:text-yellow-500 transition"
                   >
-                    <ShoppingCart />
+                    <ShoppingCart size={22} />
                   </button>
 
                 </div>
               </div>
 
+              {/* ADD TO CART */}
               <button
-                onClick={() => addToCart(p)}
-                className="w-full bg-[#E8AA31] text-white rounded-md py-2 mt-4 hover:bg-[#c98f26] transition font-semibold"
+                onClick={() => {
+                  addToCart(p);
+                  toast.success("Savatga qo‘shildi 🛒");
+                }}
+                className="w-full bg-[#E8AA31] text-white rounded-md py-2 mt-4 hover:bg-[#c98f26] transition font-semibold text-sm sm:text-base"
               >
                 В корзину
               </button>
+
             </div>
           </SwiperSlide>
         ))}

@@ -32,7 +32,7 @@ const Navbar = () => {
     <header className="w-full relative top-0">
       <div className="bg-[#141414] px-6 py-4 flex justify-between items-center">
         <ul className="hidden md:flex gap-10 text-white mont">
-          <li>О нас</li>
+          <Link to="/onas">О нас</Link>
           <li>Оплата и доставка</li>
           <li>Новости</li>
           <li>Контакты</li>
@@ -104,7 +104,7 @@ const Navbar = () => {
 
       <div className="hidden md:flex bg-[#141414] px-[90px] py-5 gap-10">
         {[
-          ["Каталог ножей", "/"],
+          ["Каталог ножей", "/katalog"],
           ["Клинковое оружие", "/orujiya"],
           ["Сувенирные изделия", "/izdeleniyaa"],
           ["Фонари ARMYTEK", "/fonari"],
@@ -128,7 +128,7 @@ const Navbar = () => {
             </button>
 
             <div className="flex flex-col gap-6 text-lg mont">
-              <Link to="/" onClick={() => setOpenMenu(false)}>Каталог ножей</Link>
+              <Link to="/katalog" onClick={() => setOpenMenu(false)}>Каталог ножей</Link>
               <Link to="/orujiya" onClick={() => setOpenMenu(false)}>Клинковое оружие</Link>
               <Link to="/izdeleniyaa" onClick={() => setOpenMenu(false)}>Сувенирные изделия</Link>
               <Link to="/fonari" onClick={() => setOpenMenu(false)}>Фонари ARMYTEK</Link>
